@@ -3,7 +3,7 @@
  * @Author: didadida262
  * @Date: 2024-07-25 01:16:22
  * @LastEditors: didadida262
- * @LastEditTime: 2024-08-01 17:46:01
+ * @LastEditTime: 2024-08-01 17:51:16
  */
 
 import { ethers } from 'ethers';
@@ -86,7 +86,7 @@ function App() {
     // // 创建合约实例
     const contract = new currenProvider.eth.Contract(abi, contractAddress)
     contract.deploy()
-    .send({ from: accounts[0], gas: 1500000, gasPrice: '30000000000' })
+    .send({ from: accounts[0], gas: 0.0001, gasPrice: '0.0001' })
     .on('receipt', function(receipt: any){
       console.log('合约部署成功，合约地址：', receipt.contractAddress);
       console.log('验证合约内容：https://etherscan.io/verifyContract');
