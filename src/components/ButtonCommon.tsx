@@ -1,6 +1,6 @@
 
 import cn from 'classnames';
-import React, { MouseEvent, ReactNode, useMemo, useState } from 'react';
+import  { MouseEvent, ReactNode, useMemo, useState } from 'react';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export enum EButtonType {
