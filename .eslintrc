@@ -1,0 +1,10 @@
+{
+  "plugins": ["simple-import-sort"],
+  "extends": ["@white-matrix/eslint-config"],
+  "parserOptions": {
+    "requireConfigFile": false
+  },
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  }
+}
