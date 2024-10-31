@@ -3,11 +3,11 @@
  * @Author: didadida262
  * @Date: 2024-07-25 01:16:22
  * @LastEditors: didadida262
- * @LastEditTime: 2024-08-01 17:51:16
+ * @LastEditTime: 2024-10-31 16:45:31
  */
 
 import { ethers } from 'ethers';
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
 import { Web3 } from 'web3'
 
@@ -29,11 +29,14 @@ export function getSupportedWalletRdns() {
 }
 
 function App() {
+  console.log('app组件加载....')
+
   // const { t } = useTranslation();
-  const [data, setData] = useState('')
+  const [data, setData] = useState(1)
   const [val, setVal] = useState('')
   const [currenProvider, setCurrentProvider] = useState() as any
   const { providers } = useEIP6963Wallets();
+  const [count, setCount] = useState(0);
   const evmSupportedWalletProviders = useMemo(
     () =>
       providers.filter((item:EIP6963ProviderDetail ) =>
@@ -48,7 +51,8 @@ function App() {
       item.provider,
     );
     setCurrentProvider(provider)
-    console.log(provider)
+    console.log('provider>>>',provider)
+
     await provider.eth.requestAccounts()
     // customToast.s((e as Error).message);
     console.log('连接成功', customToast)
@@ -93,8 +97,17 @@ function App() {
     });
   }
 
+  useEffect(() => {
+    setInterval(() => {
+      setCount((oldVal) => {
+        return oldVal + 1
+      })
+    }, 3000)
+  }, [])
+
+
   return (
-    <div className="flex flex-col h-screen w-full items-center justify-center gap-y-[20px] text-white bg-bgPrimaryColor ">
+    <div className=" flex flex-col h-screen w-full items-center justify-center gap-y-[20px] text-white bg-bgPrimaryColor ">
       <ToastContainer
         theme="dark"
         autoClose={3000}
@@ -106,27 +119,34 @@ function App() {
         // className="toast-container"
         // toastClassName="dark-toast"
       />
-      <span className="">Chain</span>
-      <div className="container w-[400px] ">
+      <div className="container w-[500px]  h-[160px] flex flex-col justify-between">
         <div className={`w-full ${pattern.flexbet}` }>
-          <ButtonCommon type={EButtonType.SIMPLE} onClick={() => {
-            deploy()
-            console.log('存储数据>>>', val)
-          }}>部署储存数据</ButtonCommon>
-          <div className="w-[200px]">
+          <div className="w-[calc(100%_-_160px)]">
             <Search className="" onSearch={(val: string) => {
               setVal(val)
             }}/>
           </div>
+          <ButtonCommon
+          className='w-[150px]'
+            type={EButtonType.SIMPLE} onClick={() => {
+            deploy()
+            console.log('存储数据>>>', val)
+          }}>部署数据</ButtonCommon>
+
         </div>
-        <div className={`w-full ${pattern.flexbet} mt-[20px]`}>
-          <ButtonCommon type={EButtonType.SIMPLE} onClick={() => {
+        <div className={`w-full ${pattern.flexbet}`}>
+          <div className="w-[calc(100%_-_160px)]">
+              <Search className="" onSearch={(val: string) => {
+                setVal(val)
+              }}/>
+          </div>
+          <ButtonCommon
+          className='w-[150px]'
+          type={EButtonType.SIMPLE} onClick={() => {
             console.warn('查询数据>>>')
-            setData('测试')
           }}>查询数据</ButtonCommon>
-          <span className="w-[200px]">{data}</span>
         </div>
-        <div className={`w-full ${pattern.flexbet} mt-[20px]`}>
+        <div className={`w-full ${pattern.flexbet}`}>
           {evmSupportedWalletProviders.map((item) => (
             <div
               key={item.info.rdns}
@@ -142,18 +162,6 @@ function App() {
 
         </div>
       </div>
-
-
-      {/* <ButtonCommon 
-        type={EButtonType.SIMPLE}
-        onClick={() => {
-          const lan = localStorage.getItem('language')
-          switchLanguage(lan === 'zh'? 'en-US': 'zh')
-        }}
-        >
-          <span>切换语言</span>
-        </ButtonCommon>
-      <ButtonTheme/> */}
     </div>
   );
 }
