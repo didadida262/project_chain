@@ -3,7 +3,7 @@
  * @Author: didadida262
  * @Date: 2024-07-25 01:16:22
  * @LastEditors: didadida262
- * @LastEditTime: 2024-10-31 16:45:31
+ * @LastEditTime: 2024-12-02 16:06:39
  */
 
 import { ethers } from 'ethers';
@@ -52,12 +52,42 @@ function App() {
     );
     setCurrentProvider(provider)
     console.log('provider>>>',provider)
-
     await provider.eth.requestAccounts()
-    // customToast.s((e as Error).message);
     console.log('连接成功', customToast)
     customToast.success('连接成功')
 
+
+  }
+
+  const startDeal = async () => {
+    const fromAddress = '0xC7514d84B96B4002D21a6F3Ad835311C555CFe6b'
+    // 获取当前 nonce
+    const nonce = await currenProvider.eth.getTransactionCount(fromAddress);
+    console.log('nonce>>>', nonce)
+
+    // 设置交易参数
+    const valueInEther = '0.000001';
+    const valueInWei = Web3.utils.toWei(valueInEther, 'ether');
+    const transaction = {
+        from: fromAddress, // 替换为发送者地址
+        to: '0xC7514d84B96B4002D21a6F3Ad835311C555CFe6b', // 替换为接收者地址
+        value: '0x' + BigInt(valueInWei).toString(16), // 发送的以太币数量（以 wei 为单位）
+        gas: '21000', // Gas 限制
+        gasPrice: '0', // Gas 价格（以 wei 为单位）
+        nonce: nonce, // 交易的 nonce
+        // chainId: 1 // 主网的 chainId
+    };
+    // 发起交易
+    console.log('currenProvider.eth.sendTransaction>>>', currenProvider.eth.sendTransaction)
+    const transactionHash = await currenProvider.eth.sendTransaction(transaction);
+    console.log('Transaction Hash:', transactionHash);
+    // 等待交易确认
+    const receipt = await currenProvider.eth.getTransactionReceipt(transactionHash);
+    if (receipt && receipt.status) {
+      console.log('Transaction was successful:', receipt);
+    } else {
+      console.log('Transaction failed:', receipt);
+    }
   }
   const deploy = async () => {
     const accounts = await currenProvider.eth.getAccounts()
@@ -158,7 +188,11 @@ function App() {
             </ButtonCommon>
             </div>
           ))}
-
+          <ButtonCommon type={EButtonType.PRIMARY} onClick={() => {
+            startDeal()
+              }}>
+                <span>Start a Deal</span>
+            </ButtonCommon>
 
         </div>
       </div>
